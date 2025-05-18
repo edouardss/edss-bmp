@@ -6,15 +6,16 @@ from viam.components.sensor import *
 from viam.proto.app.robot import ComponentConfig
 from viam.proto.common import Geometry, ResourceName
 from viam.resource.base import ResourceBase
-from viam.resource.easy_resource import EasyResource
+from viam.resource import EasyResource
 from viam.resource.types import Model, ModelFamily
 from viam.utils import SensorReading, ValueTypes
 import Adafruit_BMP.BMP085 as BMP085
 #from bmp180 import BMP180
-from machine import I2C, Pin                        # create an I2C bus object accordingly to the port you are using
+import board
+import busio
 import time
-bus = I2C(1, baudrate=100000)  
 
+i2c = busio.I2C(board.SCL, board.SDA)
 
 class BmpSensor(Sensor, EasyResource):
     # To enable debug-level logging, either run viam-server with the --debug option,
@@ -60,7 +61,7 @@ class BmpSensor(Sensor, EasyResource):
             config (ComponentConfig): The new configuration
             dependencies (Mapping[ResourceName, ResourceBase]): Any dependencies (both implicit and explicit)
         """
-        self.sensor = BMP085.BMP085(bus)
+        self.sensor = BMP085.BMP085(i2c)
         return super().reconfigure(config, dependencies)
 
     async def get_readings(

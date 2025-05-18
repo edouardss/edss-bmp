@@ -2,7 +2,7 @@
   "$schema": "https://dl.viam.dev/module.schema.json",
   "module_id": "edss:edss-bmp",
   "visibility": "public",
-  "url": "",
+  "url": "https://github.com/edouardss/edss-bmp",
   "description": "Modular sensor component: bmp-sensor",
   "models": [
     {

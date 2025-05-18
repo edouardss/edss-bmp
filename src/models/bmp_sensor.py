@@ -60,10 +60,7 @@ class BmpSensor(Sensor, EasyResource):
             config (ComponentConfig): The new configuration
             dependencies (Mapping[ResourceName, ResourceBase]): Any dependencies (both implicit and explicit)
         """
-        try:
-            self.sensor = BMP085.BMP085(bus)
-        except (RuntimeError, IOError):
-            self.sensor = BMP085.BMP085(bus)
+        self.sensor = BMP085.BMP085(bus)
         return super().reconfigure(config, dependencies)
 
     async def get_readings(

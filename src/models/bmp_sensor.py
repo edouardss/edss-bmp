@@ -9,6 +9,11 @@ from viam.resource.base import ResourceBase
 from viam.resource.easy_resource import EasyResource
 from viam.resource.types import Model, ModelFamily
 from viam.utils import SensorReading, ValueTypes
+import Adafruit_BMP.BMP085 as BMP085
+#from bmp180 import BMP180
+from machine import I2C, Pin                        # create an I2C bus object accordingly to the port you are using
+import time
+bus = I2C(1, baudrate=100000)  
 
 
 class BmpSensor(Sensor, EasyResource):
@@ -43,6 +48,7 @@ class BmpSensor(Sensor, EasyResource):
         Returns:
             Sequence[str]: A list of implicit dependencies
         """
+        # No specific configuration parameters to validate for BMP sensor
         return []
 
     def reconfigure(
@@ -54,6 +60,10 @@ class BmpSensor(Sensor, EasyResource):
             config (ComponentConfig): The new configuration
             dependencies (Mapping[ResourceName, ResourceBase]): Any dependencies (both implicit and explicit)
         """
+        try:
+            self.sensor = BMP085.BMP085(bus)
+        except (RuntimeError, IOError):
+            self.sensor = BMP085.BMP085(bus)
         return super().reconfigure(config, dependencies)
 
     async def get_readings(
@@ -63,8 +73,16 @@ class BmpSensor(Sensor, EasyResource):
         timeout: Optional[float] = None,
         **kwargs
     ) -> Mapping[str, SensorReading]:
-        self.logger.error("`get_readings` is not implemented")
-        raise NotImplementedError()
+        if self.sensor.get_sensor_data():
+            readings = {
+                "temperature": float(self.sensor.read_temperature()),
+                "pressure": float(self.sensor.read_pressure()),
+                "altitude": float(self.sensor.read_altitude()),
+                "sealevel_pressure": float(self.sensor.read_sealevel_pressure()),
+            }
+            return readings
+        else:
+            return {}
 
     async def do_command(
         self,

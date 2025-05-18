@@ -6,7 +6,6 @@ from viam.components.sensor import *
 from viam.proto.app.robot import ComponentConfig
 from viam.proto.common import Geometry, ResourceName
 from viam.resource.base import ResourceBase
-from viam.resource import EasyResource
 from viam.resource.types import Model, ModelFamily
 from viam.utils import SensorReading, ValueTypes
 import Adafruit_BMP.BMP085 as BMP085
@@ -17,7 +16,7 @@ import time
 
 i2c = busio.I2C(board.SCL, board.SDA)
 
-class BmpSensor(Sensor, EasyResource):
+class BmpSensor(Sensor):
     # To enable debug-level logging, either run viam-server with the --debug option,
     # or configure your resource/machine to display debug logs.
     MODEL: ClassVar[Model] = Model(ModelFamily("edss", "edss-bmp"), "bmp-sensor")

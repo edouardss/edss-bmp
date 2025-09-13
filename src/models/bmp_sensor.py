@@ -8,13 +8,11 @@ from viam.proto.common import Geometry, ResourceName
 from viam.resource.base import ResourceBase
 from viam.resource.types import Model, ModelFamily
 from viam.utils import SensorReading, ValueTypes
-import Adafruit_BMP.BMP085 as BMP085
-#from bmp180 import BMP180
+#import Adafruit_BMP.BMP085 as BMP085
+from bmp180 import BMP180
 import board
 import busio
 import time
-
-i2c = busio.I2C(board.SCL, board.SDA)
 
 class BmpSensor(Sensor):
     # To enable debug-level logging, either run viam-server with the --debug option,
@@ -48,7 +46,15 @@ class BmpSensor(Sensor):
         Returns:
             Sequence[str]: A list of implicit dependencies
         """
-        # No specific configuration parameters to validate for BMP sensor
+        # Validate sea_level_pressure parameter if provided
+        if "sea_level_pressure" in config.attributes:
+            try:
+                sea_level_pressure = float(config.attributes["sea_level_pressure"])
+                if sea_level_pressure <= 0:
+                    raise ValueError("sea_level_pressure must be a positive number")
+            except (ValueError, TypeError) as e:
+                raise ValueError(f"Invalid sea_level_pressure value: {e}")
+        
         return []
 
     def reconfigure(
@@ -60,7 +66,16 @@ class BmpSensor(Sensor):
             config (ComponentConfig): The new configuration
             dependencies (Mapping[ResourceName, ResourceBase]): Any dependencies (both implicit and explicit)
         """
-        self.sensor = BMP085.BMP085(i2c)
+        # Initialize I2C and BMP sensor
+        i2c = busio.I2C(board.SCL, board.SDA)
+        self.sensor = BMP180(i2c)
+        
+        # Set sea level pressure from config if provided, otherwise use default
+        if "sea_level_pressure" in config.attributes:
+            self.sea_level_pressure = float(config.attributes["sea_level_pressure"])
+        else:
+            self.sea_level_pressure = 1013.25  # Default sea level pressure in hPa
+        
         return super().reconfigure(config, dependencies)
 
     async def get_readings(
@@ -70,15 +85,27 @@ class BmpSensor(Sensor):
         timeout: Optional[float] = None,
         **kwargs
     ) -> Mapping[str, SensorReading]:
-        if self.sensor.get_sensor_data():
-            readings = {
-                "temperature": float(self.sensor.read_temperature()),
-                "pressure": float(self.sensor.read_pressure()),
-                "altitude": float(self.sensor.read_altitude()),
-                "sealevel_pressure": float(self.sensor.read_sealevel_pressure()),
-            }
-            return readings
+        if self.sensor:
+            try:
+                # Read sensor data
+                temperature = self.sensor.read_temperature()
+                pressure = self.sensor.read_pressure()
+                
+                # Calculate altitude using the configured sea level pressure
+                altitude = self.sensor.read_altitude(self.sea_level_pressure)
+                
+                readings = {
+                    "temperature": float(temperature),
+                    "pressure": float(pressure),
+                    "altitude": float(altitude),
+                    "sea_level_pressure": float(self.sea_level_pressure),
+                }
+                return readings
+            except Exception as e:
+                self.logger.error(f"Error reading sensor data: {e}")
+                return {}
         else:
+            self.logger.error("Sensor not initialized")
             return {}
 
     async def do_command(

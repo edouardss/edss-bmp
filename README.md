@@ -11,8 +11,7 @@ The following attribute template can be used to configure this model:
 
 ```json
 {
-"attribute_1": <float>,
-"attribute_2": <string>
+  "sea_level_pressure": <float>
 }
 ```
 
@@ -20,17 +19,15 @@ The following attribute template can be used to configure this model:
 
 The following attributes are available for this model:
 
-| Name          | Type   | Inclusion | Description                |
-|---------------|--------|-----------|----------------------------|
-| `attribute_1` | float  | Required  | Description of attribute 1 |
-| `attribute_2` | string | Optional  | Description of attribute 2 |
+| Name                 | Type  | Inclusion | Description                                    |
+|----------------------|-------|-----------|------------------------------------------------|
+| `sea_level_pressure` | float | Optional  | Sea level pressure in hPa for altitude calculations (default: 1013.25) |
 
 #### Example Configuration
 
 ```json
 {
-  "attribute_1": 1.0,
-  "attribute_2": "foo"
+  "sea_level_pressure": 1013.25
 }
 ```
 

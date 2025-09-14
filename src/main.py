@@ -10,5 +10,5 @@ except ModuleNotFoundError:
 if __name__ == '__main__':
     # Register the model with the module
     # module = Module()
-    module.add_model(BmpSensor.MODEL, BmpSensor)
+    # module.add_model(BmpSensor.MODEL, BmpSensor)
     asyncio.run(module.run_from_registry())

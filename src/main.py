@@ -8,4 +8,7 @@ except ModuleNotFoundError:
 
 
 if __name__ == '__main__':
-    asyncio.run(Module.run_from_registry())
+    # Register the model with the module
+    # module = Module()
+    module.add_model(BmpSensor.MODEL, BmpSensor)
+    asyncio.run(module.run_from_registry())

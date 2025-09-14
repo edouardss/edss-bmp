@@ -8,8 +8,7 @@ from viam.proto.common import Geometry, ResourceName
 from viam.resource.base import ResourceBase
 from viam.resource.types import Model, ModelFamily
 from viam.utils import SensorReading, ValueTypes
-#import Adafruit_BMP.BMP085 as BMP085
-from bmp180 import BMP180
+import Adafruit_BMP.BMP085 as BMP085
 import board
 import busio
 import time
@@ -66,15 +65,20 @@ class BmpSensor(Sensor):
             config (ComponentConfig): The new configuration
             dependencies (Mapping[ResourceName, ResourceBase]): Any dependencies (both implicit and explicit)
         """
-        # Initialize I2C and BMP sensor
-        i2c = busio.I2C(board.SCL, board.SDA)
-        self.sensor = BMP180(i2c)
-        
-        # Set sea level pressure from config if provided, otherwise use default
-        if "sea_level_pressure" in config.attributes:
-            self.sea_level_pressure = float(config.attributes["sea_level_pressure"])
-        else:
-            self.sea_level_pressure = 1013.25  # Default sea level pressure in hPa
+        try:
+            # Initialize I2C and BMP sensor
+            i2c = busio.I2C(board.SCL, board.SDA)
+            self.sensor = BMP085.BMP085(i2c)
+            
+            # Set sea level pressure from config if provided, otherwise use default
+            if "sea_level_pressure" in config.attributes:
+                self.sea_level_pressure = float(config.attributes["sea_level_pressure"])
+            else:
+                self.sea_level_pressure = 1013.25  # Default sea level pressure in hPa
+                
+        except Exception as e:
+            self.logger.error(f"Failed to initialize BMP sensor: {e}")
+            self.sensor = None
         
         return super().reconfigure(config, dependencies)
 

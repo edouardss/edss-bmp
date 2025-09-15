@@ -1,19 +1,17 @@
 import asyncio
-from typing import (Any, ClassVar, Dict, Final, List, Mapping, Optional,
-                    Sequence)
+from typing import Any, ClassVar, Dict, List, Mapping, Optional, Sequence
 
 from typing_extensions import Self
-from viam.components.sensor import *
+from viam.components.sensor import Sensor
 from viam.module.module import Module
 from viam.proto.app.robot import ComponentConfig
-from viam.proto.common import Geometry, ResourceName
+from viam.proto.common import ResourceName
 from viam.resource.base import ResourceBase
 from viam.resource.types import Model, ModelFamily
 from viam.utils import SensorReading, ValueTypes
 import Adafruit_BMP.BMP085 as BMP085
 import board
 import busio
-import time
 
 
 class BmpSensor(Sensor):
@@ -127,7 +125,7 @@ class BmpSensor(Sensor):
 
     async def get_geometries(
         self, *, extra: Optional[Dict[str, Any]] = None, timeout: Optional[float] = None
-    ) -> List[Geometry]:
+    ) -> List:
         self.logger.error("`get_geometries` is not implemented")
         raise NotImplementedError()
 

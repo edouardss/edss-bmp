@@ -17,6 +17,7 @@ class BmpSensor(Sensor):
     # To enable debug-level logging, either run viam-server with the --debug option,
     # or configure your resource/machine to display debug logs.
     MODEL: ClassVar[Model] = Model(ModelFamily("edss", "edss-bmp"), "bmp-sensor")
+    print('MODEL: ', Self.MODEL)
 
     @classmethod
     def new(
@@ -68,7 +69,7 @@ class BmpSensor(Sensor):
         try:
             # Initialize I2C and BMP sensor
             i2c = busio.I2C(board.SCL, board.SDA)
-            self.sensor = BMP085.BMP085(i2c)
+            self.sensor = BMP085.BMP085(busnum=1)
             
             # Set sea level pressure from config if provided, otherwise use default
             if "sea_level_pressure" in config.attributes:

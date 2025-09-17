@@ -14,7 +14,7 @@
   ],
   "applications": null,
   "markdown_link": "README.md",
-  "entrypoint": "./reload.sh",
+  "entrypoint": "./run.sh",
   "first_run": "",
   "build": {
     "build": "rm -f module.tar.gz && tar czf module.tar.gz requirements.txt src/*.py src/models/*.py meta.json setup.sh run.sh reload.sh",

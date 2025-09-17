@@ -1,4 +1,4 @@
-from typing import (Any, ClassVar, Dict, Final, List, Mapping, Optional,
+from typing import (Any, ClassVar, Dict, List, Mapping, Optional,
                     Sequence)
 
 from typing_extensions import Self
@@ -11,9 +11,8 @@ from viam.utils import SensorReading, ValueTypes
 import Adafruit_BMP.BMP085 as BMP085
 import board
 import busio
-import time
 
-class BmpSensor(Sensor):
+class BmpSensor(Sensor, EasyResource):
     # To enable debug-level logging, either run viam-server with the --debug option,
     # or configure your resource/machine to display debug logs.
     MODEL: ClassVar[Model] = Model(ModelFamily("edss", "edss-bmp"), "bmp-sensor")
@@ -123,9 +122,4 @@ class BmpSensor(Sensor):
         self.logger.error("`do_command` is not implemented")
         raise NotImplementedError()
 
-    async def get_geometries(
-        self, *, extra: Optional[Dict[str, Any]] = None, timeout: Optional[float] = None
-    ) -> List[Geometry]:
-        self.logger.error("`get_geometries` is not implemented")
-        raise NotImplementedError()
 

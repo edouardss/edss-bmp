@@ -8,7 +8,7 @@
     {
       "api": "rdk:component:sensor",
       "model": "edss:edss-bmp:bmp-sensor",
-      "short_description": "I2C BMP280/BMP180 sensor providing atmospheric pressure, altitude, and temperature readings with configurable units and tare functionality",
+      "short_description": "I2C BMP280/BMP180 sensor for atmospheric pressure, altitude, and temperature readings",
       "markdown_link": "README.md#model-edssedss-bmpbmp-sensor"
     }
   ],

@@ -69,14 +69,19 @@ fi
 # Create the archive
 echo "Creating module archive..."
 mkdir -p dist
-tar -czf dist/archive.tar.gz \
-    -C dist main \
-    build.sh \
-    run.sh \
-    setup.sh \
-    requirements.txt \
-    meta.json \
-    README.md
+
+# Get the absolute path of the current directory
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# Create the archive with absolute paths
+tar -czf "$SCRIPT_DIR/dist/archive.tar.gz" \
+    -C "$SCRIPT_DIR/dist" main \
+    -C "$SCRIPT_DIR" build.sh \
+    -C "$SCRIPT_DIR" run.sh \
+    -C "$SCRIPT_DIR" setup.sh \
+    -C "$SCRIPT_DIR" requirements.txt \
+    -C "$SCRIPT_DIR" meta.json \
+    -C "$SCRIPT_DIR" README.md
 
 if [ $? -ne 0 ]; then
     echo "Failed to create archive"

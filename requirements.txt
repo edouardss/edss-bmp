@@ -1,6 +1,6 @@
 viam-sdk==0.46.0
 
-typing-extensions
+typing-extensions>=4.0.0
 
 Adafruit-BMP==1.5.2
 

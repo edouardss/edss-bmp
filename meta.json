@@ -3,7 +3,7 @@
   "module_id": "edss:edss-bmp",
   "visibility": "public",
   "url": "https://github.com/edouardss/edss-bmp",
-  "description": "BMP280/BMP180 I2C sensor module providing atmospheric pressure, altitude, and temperature readings with configurable units and tare functionality",
+  "description": "BMP280/BMP180 I2C sensor module for altitude and pressure.",
   "models": [
     {
       "api": "rdk:component:sensor",

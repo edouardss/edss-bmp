@@ -75,7 +75,8 @@ tar -czf dist/archive.tar.gz \
     -C .. run.sh \
     -C .. setup.sh \
     -C .. requirements.txt \
-    -C .. meta.json
+    -C .. meta.json \
+    -C .. README.md
 
 if [ $? -ne 0 ]; then
     echo "Failed to create archive"

@@ -13,18 +13,6 @@ if [ ! -d "$VENV_NAME" ]; then
         echo "Failed to create virtual environment"
         exit 1
     fi
-else
-    echo "Virtual environment already exists, checking permissions..."
-    # Check if we can write to the venv, if not, recreate it
-    if [ ! -w "$VENV_NAME" ]; then
-        echo "Virtual environment has permission issues, recreating..."
-        sudo rm -rf $VENV_NAME
-        python3 -m venv $VENV_NAME
-        if [ $? -ne 0 ]; then
-            echo "Failed to recreate virtual environment"
-            exit 1
-        fi
-    fi
 fi
 
 # Install/upgrade pip and PyInstaller
@@ -53,12 +41,8 @@ $PYTHON -m PyInstaller \
     --distpath=dist \
     --workpath=build \
     --specpath=. \
-    --hidden-import="googleapiclient" \
-    --hidden-import="viam" \
-    --hidden-import="adafruit_bmp280" \
-    --hidden-import="adafruit_bus_device" \
-    --hidden-import="board" \
-    --hidden-import="busio" \
+    --add-data="src:src" \
+    --hidden-import="src.models.bmp_sensor" \
     src/main.py
 
 if [ $? -ne 0 ]; then

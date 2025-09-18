@@ -71,12 +71,12 @@ echo "Creating module archive..."
 mkdir -p dist
 tar -czf dist/archive.tar.gz \
     -C dist main \
-    -C .. build.sh \
-    -C .. run.sh \
-    -C .. setup.sh \
-    -C .. requirements.txt \
-    -C .. meta.json \
-    -C .. README.md
+    build.sh \
+    run.sh \
+    setup.sh \
+    requirements.txt \
+    meta.json \
+    README.md
 
 if [ $? -ne 0 ]; then
     echo "Failed to create archive"

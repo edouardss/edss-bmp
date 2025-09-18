@@ -3,23 +3,23 @@
   "module_id": "edss:edss-bmp",
   "visibility": "public",
   "url": "https://github.com/edouardss/edss-bmp",
-  "description": "Modular sensor component: bmp-sensor",
+  "description": "BMP280/BMP180 I2C sensor module providing atmospheric pressure, altitude, and temperature readings with configurable units and tare functionality",
   "models": [
     {
       "api": "rdk:component:sensor",
       "model": "edss:edss-bmp:bmp-sensor",
-      "short_description": "Provide a short (100 characters or less) description of this model here",
+      "short_description": "I2C BMP280/BMP180 sensor providing atmospheric pressure, altitude, and temperature readings with configurable units and tare functionality",
       "markdown_link": "README.md#model-edssedss-bmpbmp-sensor"
     }
   ],
   "applications": null,
   "markdown_link": "README.md",
-  "entrypoint": "./reload.sh",
+  "entrypoint": "./run.sh",
   "first_run": "",
   "build": {
-    "build": "rm -f module.tar.gz && tar czf module.tar.gz requirements.txt src/*.py src/models/*.py meta.json setup.sh run.sh reload.sh",
+    "build": "./build.sh",
     "setup": "./setup.sh",
-    "path": "./module.tar.gz",
+    "path": "dist/archive.tar.gz",
     "arch": [
       "linux/amd64",
       "linux/arm64"

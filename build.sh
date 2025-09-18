@@ -5,71 +5,42 @@ cd `dirname $0`
 VENV_NAME="venv"
 PYTHON="$VENV_NAME/bin/python"
 
-# Create virtual environment if it doesn't exist
-if [ ! -d "$VENV_NAME" ]; then
-    echo "Creating virtual environment..."
-    python3 -m venv $VENV_NAME
-    if [ $? -ne 0 ]; then
-        echo "Failed to create virtual environment"
-        exit 1
-    fi
-fi
-
-# Install/upgrade pip and PyInstaller
-echo "Installing PyInstaller..."
-if ! $PYTHON -m pip install --upgrade pip pyinstaller -qq; then
-    echo "Failed to install PyInstaller"
+if ! $PYTHON -m pip install pyinstaller -Uqq; then
     exit 1
 fi
 
-# Install module dependencies
-echo "Installing module dependencies..."
-if ! $PYTHON -m pip install -r requirements.txt -qq; then
-    echo "Failed to install module dependencies"
-    exit 1
-fi
+# Build the Python executable
+$PYTHON -m PyInstaller --onefile --hidden-import="googleapiclient" src/main.py
 
-# Clean previous builds
-echo "Cleaning previous builds..."
-rm -rf dist/ build/ *.spec
+# Create a comprehensive module package
+echo "📦 Creating module package with all necessary files..."
 
-# Build the executable
-echo "Building executable with PyInstaller..."
-$PYTHON -m PyInstaller \
-    --onefile \
-    --name=main \
-    --distpath=dist \
-    --workpath=build \
-    --specpath=. \
-    --add-data="src:src" \
-    --hidden-import="src.models.bmp_sensor" \
-    src/main.py
+# Create a temporary directory for packaging
+TEMP_DIR="temp_module"
+rm -rf "$TEMP_DIR"
+mkdir -p "$TEMP_DIR"
 
-if [ $? -ne 0 ]; then
-    echo "PyInstaller build failed"
-    exit 1
-fi
+# Copy essential files for deployment
+cp setup.sh "$TEMP_DIR/"
+cp run.sh "$TEMP_DIR/"
+cp build.sh "$TEMP_DIR/"
+cp meta.json "$TEMP_DIR/"
+cp requirements.txt "$TEMP_DIR/"
+cp README.md "$TEMP_DIR/"
 
-# Create the archive
-echo "Creating module archive..."
-mkdir -p dist
+# Copy source code
+cp -r src/ "$TEMP_DIR/"
 
-# Get the absolute path of the current directory
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# Copy the built executable
+cp dist/main "$TEMP_DIR/"
 
-# Create the archive with absolute paths
-tar -czf "$SCRIPT_DIR/dist/archive.tar.gz" \
-    -C "$SCRIPT_DIR/dist" main \
-    -C "$SCRIPT_DIR" build.sh \
-    -C "$SCRIPT_DIR" run.sh \
-    -C "$SCRIPT_DIR" setup.sh \
-    -C "$SCRIPT_DIR" requirements.txt \
-    -C "$SCRIPT_DIR" meta.json \
-    -C "$SCRIPT_DIR" README.md
+# Create the final module archive
+tar -czvf module.tar.gz -C "$TEMP_DIR" .
 
-if [ $? -ne 0 ]; then
-    echo "Failed to create archive"
-    exit 1
-fi
+# Clean up temporary directory
+rm -rf "$TEMP_DIR"
 
-echo "Build completed successfully: dist/archive.tar.gz"
+echo "✅ Module package created: module.tar.gz"
+echo "📋 Included files:"
+tar -tzf module.tar.gz | head -20
+echo "... (and more)"

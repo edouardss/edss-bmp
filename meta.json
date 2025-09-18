@@ -3,12 +3,12 @@
   "module_id": "edss:edss-bmp",
   "visibility": "public",
   "url": "https://github.com/edouardss/edss-bmp",
-  "description": "Modular sensor component: bmp-sensor",
+  "description": "Modular sensor component: i2c bmp-sensor",
   "models": [
     {
       "api": "rdk:component:sensor",
       "model": "edss:edss-bmp:bmp-sensor",
-      "short_description": "Provide a short (100 characters or less) description of this model here",
+      "short_description": "Module for an i2c bmp sensor providing altitude and temperature based on atmospheric pressure",
       "markdown_link": "README.md#model-edssedss-bmpbmp-sensor"
     }
   ],

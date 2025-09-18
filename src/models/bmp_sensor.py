@@ -15,7 +15,7 @@ import busio
 class BmpSensor(Sensor, EasyResource):
     # To enable debug-level logging, either run viam-server with the --debug option,
     # or configure your resource/machine to display debug logs.
-    MODEL: ClassVar[Model] = Model(ModelFamily("edss", "i2c-sensors"), "bmp-sensor")
+    MODEL: ClassVar[Model] = Model(ModelFamily("edss", "edss-bmp"), "bmp-sensor")
     # print('MODEL: ', Self.MODEL)
 
     @classmethod

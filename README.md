@@ -1,7 +1,4 @@
 # Module edss-bmp 
-
-Provide a description of the purpose of the module and any relevant information.
-
 ## Model edss:edss-bmp:bmp-sensor
 
 Altitude and pressure sensor. 
